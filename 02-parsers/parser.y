@@ -36,23 +36,130 @@
 %define api.token.prefix {TOK_}
 
 %token
+// Unable to classify :)
     END 0 "end of file"
-    ASSIGN ":="
-    MINUS "-"
-    PLUS "+"
-    STAR "*"
-    SLASH "/"
+    SEMICOLON ";"
+
+// Brackets
     LPAREN "("
     RPAREN ")"
+    LBRACE "{"
+    RBRACE "}"
+    LBRACKET "["
+    RBRACKET "]"
+
+// Operators
+    op_member 	"."
+    op_assign 	"="
+    op_sub	"-"
+    op_add 	"+"
+    op_mul	"*"
+    op_div 	"/"
+    op_inv	"!"
+
+// Keywords
+    kw_class 	"class"
+    kw_public 	"public"
+    kw_static 	"static"
+    kw_void 	"void"
+    kw_main 	"main"
+    kw_System 	"System"
+    kw_out 	"out"
+    kw_println	"println"
+    kw_new	"new"
+    kw_length   "length"
+    kw_true	"true"
+    kw_false	"false"
+    kw_return	"return"
+    kw_if	"if"
+    kw_else	"else"
+    kw_while	"while"
+
+// Types
+    t_int	"int"
+    t_boolean	"boolean"
 ;
 
 %token <std::string> IDENTIFIER "identifier"
 %token <int> NUMBER "number"
-%nterm <int> exp
+%nterm <int> expression
+%nterm <int*> lvalue;
 
 %printer { yyo << $$; } <*>;
 
 %%
+%start program;
+program: main_class
+
+main_class:
+    "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}"
+
+statements:
+    %empty {}
+    | statements statement {};
+
+statement:
+    open_statement
+    | closed_statement
+
+open_statement:
+    "if" "(" expression ")" statement
+    | "if" "(" expression ")" closed_statement "else" open_statement
+    | loop_header open_statement
+
+closed_statement:
+    simple_statement
+    | "if" "(" expression ")" closed_statement "else" closed_statement
+    | loop_header closed_statement
+
+loop_header:
+    "while" "(" expression ")"
+
+simple_statement:
+    "System" "." "out" "." "println" "(" expression ")" ";" { std::cout << $7 << std::endl; }
+    | local_var_decl
+    | lvalue "=" expression ";" { *($1) = $3; };
+    | "return" expression ";" { driver.result = $2; }
+    | "{" statements "}" {};
+
+// Set the precedence for binary ops
+%left "+" "-";
+%left "*" "/";
+%left "!";
+
+expression:
+    "number"
+    | "identifier" { $$ = driver.variables[$1]; }
+    | expression "+" expression { $$ = $1 + $3; }
+    | expression "-" expression { $$ = $1 - $3; }
+    | expression "*" expression { $$ = $1 * $3; }
+    | expression "/" expression { $$ = $1 / $3; }
+
+    | "!" expression { $$ = !($2); }
+
+    | "true"  { $$ = 1; }
+    | "false" { $$ = 0; }
+
+    | "(" expression ")" { $$ = $2; };
+
+type:
+    simple_type
+
+simple_type:
+    "int"
+    | "boolean";
+
+var_decl:
+    type "identifier" ";" { driver.variables[$2] = 0; };
+
+local_var_decl:
+    var_decl;
+
+lvalue:
+    "identifier" { $$ = &driver.variables[$1]; };
+
+
+/*
 %start unit;
 unit: assignments exp { driver.result = $2; };
 
@@ -78,6 +185,7 @@ exp:
     | exp "/" exp {$$ = $1 / $3; }
     | "(" exp ")" {$$ = $2; };
 
+*/
 %%
 
 void
