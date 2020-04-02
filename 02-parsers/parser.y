@@ -157,35 +157,6 @@ local_var_decl:
 
 lvalue:
     "identifier" { $$ = &driver.variables[$1]; };
-
-
-/*
-%start unit;
-unit: assignments exp { driver.result = $2; };
-
-assignments:
-    %empty {}
-    | assignments assignment {};
-
-assignment:
-    "identifier" ":=" exp {
-        driver.variables[$1] = $3;
-        // std::cout << drv.location.begin.line << "-" << drv.location.end.line << std::endl;
-    };
-
-%left "+" "-";
-%left "*" "/";
-
-exp:
-    "number"
-    | "identifier" {$$ = driver.variables[$1];}
-    | exp "+" exp {$$ = $1 + $3; }
-    | exp "-" exp {$$ = $1 - $3; }
-    | exp "*" exp {$$ = $1 * $3; }
-    | exp "/" exp {$$ = $1 / $3; }
-    | "(" exp ")" {$$ = $2; };
-
-*/
 %%
 
 void

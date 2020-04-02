@@ -26,7 +26,7 @@ add_executable(
     driver.cpp
     ${BISON_MyParser_OUTPUTS}
     ${FLEX_MyScanner_OUTPUTS}
-)
+        Program.cpp Program.h)
 target_include_directories(ParserExample PRIVATE ${ParserExample_SOURCE_DIR})
 
 
