@@ -26,7 +26,7 @@ add_executable(
     driver.cpp
     ${BISON_MyParser_OUTPUTS}
     ${FLEX_MyScanner_OUTPUTS}
-        Program.cpp Program.h)
+        Program.h Expr/Expr.h BaseNode.h Expr/BinaryOp.cpp Expr/BinaryOp.h Visitor/Visitor.h Entity/Const.hpp Type/Type.h Entity/Entity.h Entity/Id.h Entity/Id.cpp Stmt/Stmt.h Stmt/Assign.cpp Stmt/Assign.h Stmt/Print.cpp Stmt/Print.h Stmt/VarDecl.cpp Stmt/VarDecl.h Expr/UnaryOp.h Stmt/Ret.cpp Stmt/Ret.h Stmt/List.cpp Stmt/List.h Expr/UnaryOp.cpp ast.h Expr/rvalue.cpp Expr/rvalue.h Expr/lvalue.cpp Expr/lvalue.h Stmt/Cond.cpp Stmt/Cond.h ast_decl.h Visitor/PrintAST.cpp Visitor/PrintAST.h)
 target_include_directories(ParserExample PRIVATE ${ParserExample_SOURCE_DIR})
 
 

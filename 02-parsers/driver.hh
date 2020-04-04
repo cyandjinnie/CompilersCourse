@@ -5,7 +5,7 @@
 #include <fstream>
 #include "scanner.h"
 #include "parser.hh"
-
+#include "Program.h"
 
 class Driver {
  public:
@@ -21,6 +21,9 @@ class Driver {
 
     bool trace_scanning;
     yy::location location;
+    
+    Program* program;
+    void PrintAST(const std::string& filename);
 
     friend class Scanner;
     Scanner scanner;

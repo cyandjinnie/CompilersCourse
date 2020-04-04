@@ -1,7 +1,11 @@
 class Program {
 	public static void main () {
 		if (true) {
-			System.out.println(true);
+			if (true) {
+				System.out.println(true + true);
+			} else {
+				System.out.println(true + false);
+			}
 		} else {
 			System.out.println(false);
 		}
